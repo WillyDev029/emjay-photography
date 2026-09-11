@@ -8,9 +8,11 @@ import { getSettings } from '@/lib/api/settings'
 import { useServices } from '@/hooks/useServices'
 import { TIME_SLOTS } from '@/lib/demo-data'
 import { cn, formatTo12h } from '@/lib/utils'
+import { combinePhone } from '@/lib/country-codes'
 import { MonthCalendar } from './MonthCalendar'
 import { BookingConfirmation } from './BookingConfirmation'
 import { Field, Input, Select, Textarea } from '@/components/ui/Input'
+import { CountryPhoneInput } from '@/components/ui/CountryPhoneInput'
 import { Button } from '@/components/ui/Button'
 import { LoadingBlock } from '@/components/ui/State'
 import type { Booking } from '@/types'
@@ -34,7 +36,8 @@ export function BookingForm({
   const [formData, setFormData] = useState({
     client_name: '',
     email: '',
-    phone: '',
+    phone_code: '+234',
+    phone_number: '',
     service_id: preselectedServiceId ?? '',
     preferred_date: '',
     preferred_time: '',
@@ -116,12 +119,23 @@ export function BookingForm({
     })
   }
 
+  const handlePhoneChange = (field: 'phone_code' | 'phone_number', value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }))
+    setErrors((prev) => {
+      if (!prev.phone) return prev
+      const next = { ...prev }
+      delete next.phone
+      return next
+    })
+  }
+
   const handleSubmit = async () => {
     if (submitting) return
     setFormError(null)
 
     const result = bookingSchema.safeParse({
       ...formData,
+      phone: combinePhone(formData.phone_code, formData.phone_number),
       service_id: formData.service_id === 'custom' ? null : formData.service_id || null,
       service_name:
         formData.service_id === 'custom'
@@ -297,13 +311,18 @@ export function BookingForm({
                 autoComplete="email"
               />
             </Field>
-            <Field label="Phone" required error={errors.phone}>
-              <Input
-                type="tel"
-                value={formData.phone}
-                onChange={(e) => handleChange('phone', e.target.value)}
-                placeholder="+1 555 000 0000"
-                autoComplete="tel"
+            <Field
+              label="Phone"
+              required
+              error={errors.phone}
+              hint="Country code is auto-selected — just add your local number"
+            >
+              <CountryPhoneInput
+                code={formData.phone_code}
+                number={formData.phone_number}
+                onCodeChange={(value) => handlePhoneChange('phone_code', value)}
+                onNumberChange={(value) => handlePhoneChange('phone_number', value)}
+                numberPlaceholder="800 123 4567"
               />
             </Field>
           </div>

@@ -3,9 +3,11 @@ import { Mail, MapPin, Phone, Clock } from 'lucide-react'
 import { useSettings } from '@/context/SettingsContext'
 import { PageHero } from '@/components/section/PageHero'
 import { Field, Input, Textarea } from '@/components/ui/Input'
+import { CountryPhoneInput } from '@/components/ui/CountryPhoneInput'
 import { Button } from '@/components/ui/Button'
 import { whatsAppLink } from '@/components/layout/WhatsAppButton'
 import { WhatsAppIcon } from '@/components/ui/WhatsAppIcon'
+import { combinePhone } from '@/lib/country-codes'
 import { contactSchema } from '@/lib/validation'
 import { useToast } from '@/hooks/useToast'
 import { demoStore } from '@/lib/demo-store'
@@ -20,7 +22,8 @@ export function ContactPage() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    phone: '',
+    phone_code: '+234',
+    phone_number: '',
     message: '',
   })
   const [errors, setErrors] = useState<Record<string, string>>({})
@@ -35,9 +38,22 @@ export function ContactPage() {
     })
   }
 
+  const handlePhoneChange = (field: 'phone_code' | 'phone_number', value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }))
+    setErrors((prev) => {
+      if (!prev.phone) return prev
+      const next = { ...prev }
+      delete next.phone
+      return next
+    })
+  }
+
   const handleSubmit = async () => {
     if (submitting) return
-    const result = contactSchema.safeParse(formData)
+    const result = contactSchema.safeParse({
+      ...formData,
+      phone: combinePhone(formData.phone_code, formData.phone_number),
+    })
     if (!result.success) {
       const next: Record<string, string> = {}
       for (const issue of result.error.issues) {
@@ -75,7 +91,7 @@ export function ContactPage() {
         // Notification failure must not block the contact flow.
       }
       toast('Message sent successfully — I will reply soon.')
-      setFormData({ name: '', email: '', phone: '', message: '' })
+      setFormData({ name: '', email: '', phone_code: '+234', phone_number: '', message: '' })
     } catch (error) {
       toast(error instanceof Error ? error.message : 'Failed to send message.', 'error')
     } finally {
@@ -194,11 +210,12 @@ export function ContactPage() {
                   />
                 </Field>
                 <Field label="Phone" error={errors.phone}>
-                  <Input
-                    type="tel"
-                    value={formData.phone}
-                    onChange={(e) => handleChange('phone', e.target.value)}
-                    placeholder="+1 555 000 0000"
+                  <CountryPhoneInput
+                    code={formData.phone_code}
+                    number={formData.phone_number}
+                    onCodeChange={(value) => handlePhoneChange('phone_code', value)}
+                    onNumberChange={(value) => handlePhoneChange('phone_number', value)}
+                    numberPlaceholder="800 123 4567"
                   />
                 </Field>
               </div>
