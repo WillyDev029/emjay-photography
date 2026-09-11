@@ -105,11 +105,13 @@ export function BookingForm({
 
     const result = bookingSchema.safeParse({
       ...formData,
-      service_id: formData.service_id || null,
+      service_id: formData.service_id === 'custom' ? null : formData.service_id || null,
       service_name:
-        services?.find((s) => s.id === formData.service_id)?.name ??
-        preselectedServiceName ??
-        '',
+        formData.service_id === 'custom'
+          ? 'Custom / multiple services'
+          : services?.find((s) => s.id === formData.service_id)?.name ??
+            preselectedServiceName ??
+            '',
       num_people: Number(formData.num_people),
     })
 
@@ -160,7 +162,8 @@ export function BookingForm({
         booking={confirmed}
         serviceName={
           services?.find((s) => s.id === formData.service_id)?.name ??
-          preselectedServiceName
+          preselectedServiceName ??
+          confirmed.service_name
         }
       />
     )

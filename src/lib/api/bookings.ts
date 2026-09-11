@@ -26,6 +26,8 @@ export async function createBooking(
   input: BookingInput,
 ): Promise<CreateBookingResult> {
   const reference = generateReference()
+  const serviceId =
+    input.service_id && input.service_id !== 'custom' ? input.service_id : null
 
   if (!isSupabaseConfigured) {
     const booking = await demoStore.createBooking({
@@ -33,7 +35,7 @@ export async function createBooking(
       client_name: input.client_name,
       email: input.email,
       phone: input.phone,
-      service_id: input.service_id,
+      service_id: serviceId,
       service_name: input.service_name,
       preferred_date: input.preferred_date,
       preferred_time: input.preferred_time,
@@ -53,7 +55,7 @@ export async function createBooking(
       client_name: input.client_name,
       email: input.email,
       phone: input.phone,
-      service_id: input.service_id,
+      service_id: serviceId,
       service_name: input.service_name,
       preferred_date: input.preferred_date,
       preferred_time: input.preferred_time,
