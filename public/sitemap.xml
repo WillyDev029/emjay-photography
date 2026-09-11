@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Update the domain below to your live site URL after deploying. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://your-app.onrender.com/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://your-app.onrender.com/portfolio</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://your-app.onrender.com/services</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://your-app.onrender.com/about</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://your-app.onrender.com/booking</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://your-app.onrender.com/contact</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://emjay-photography.onrender.com/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://emjay-photography.onrender.com/portfolio</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://emjay-photography.onrender.com/services</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://emjay-photography.onrender.com/about</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://emjay-photography.onrender.com/booking</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://emjay-photography.onrender.com/contact</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
 </urlset>

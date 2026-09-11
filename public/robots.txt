@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://your-app.onrender.com/sitemap.xml
+Sitemap: https://emjay-photography.onrender.com/sitemap.xml
