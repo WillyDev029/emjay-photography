@@ -1,8 +1,9 @@
 import type { BookingStatus } from '@/types'
+import { twMerge } from 'tailwind-merge'
 
-/** Join class names, skipping falsy values. */
+/** Join class names, resolving conflicting Tailwind utilities (last wins). */
 export function cn(...parts: Array<string | false | null | undefined>): string {
-  return parts.filter(Boolean).join(' ')
+  return twMerge(parts.filter(Boolean).join(' '))
 }
 
 export function formatDate(value: string | null | undefined): string {
@@ -86,17 +87,24 @@ export function addDaysISO(isoDate: string, days: number): string {
 }
 
 export const STATUS_COLORS: Record<BookingStatus, string> = {
-  pending: '#c2a05f',
+  pending: '#d97706',
   confirmed: '#4c7a4c',
   completed: '#2c6e9e',
   cancelled: '#b0533c',
 }
 
 export const STATUS_BG: Record<BookingStatus, string> = {
-  pending: 'bg-gold-500/15 text-gold-700',
+  pending: 'bg-amber-500/15 text-amber-700',
   confirmed: 'bg-emerald-600/10 text-emerald-700',
   completed: 'bg-sky-600/10 text-sky-700',
   cancelled: 'bg-red-600/10 text-red-700',
+}
+
+export const BOOKING_STATUS_DOT: Record<BookingStatus, string> = {
+  pending: 'bg-amber-500',
+  confirmed: 'bg-emerald-500',
+  completed: 'bg-sky-500',
+  cancelled: 'bg-red-500',
 }
 
 export const BOOKING_STATUS_LABELS: Record<BookingStatus, string> = {

@@ -15,7 +15,7 @@ import { Seo } from '@/components/ui/Seo'
 import type { BlockedDate } from '@/types'
 
 const LEGEND = [
-  { label: 'Pending', className: 'bg-gold-500' },
+  { label: 'Pending', className: 'bg-amber-500' },
   { label: 'Confirmed', className: 'bg-emerald-600' },
   { label: 'Completed', className: 'bg-sky-600' },
   { label: 'Cancelled', className: 'bg-red-500' },

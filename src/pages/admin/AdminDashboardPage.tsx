@@ -43,7 +43,7 @@ export function AdminDashboardPage() {
             <h2 className="font-display text-lg text-ink-900">Recent bookings</h2>
             <Link
               to="/admin/bookings"
-              className="flex items-center gap-1 text-xs font-medium uppercase tracking-wider text-gold-700 hover:text-gold-800"
+              className="flex items-center gap-1 text-xs font-medium uppercase tracking-wider text-gold-700 hover:text-gold-600"
             >
               View all <ArrowRight className="h-3.5 w-3.5" />
             </Link>

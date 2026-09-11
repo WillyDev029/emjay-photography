@@ -12,7 +12,7 @@ export interface CalendarDayInfo {
 }
 
 const STATUS_DOT: Record<DayStatus, string> = {
-  pending: 'bg-gold-500',
+  pending: 'bg-amber-500',
   confirmed: 'bg-emerald-600',
   completed: 'bg-sky-600',
   cancelled: 'bg-red-500',
