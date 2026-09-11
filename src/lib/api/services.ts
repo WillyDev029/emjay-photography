@@ -37,7 +37,7 @@ export async function createService(input: ServiceInput): Promise<Service> {
     return demoStore.createService({
       ...input,
       slug: slugify(input.name),
-      sort_order: Date.now(),
+      sort_order: Math.floor(Date.now() / 1000),
       storage_path: input.storage_path ?? null,
     })
   }
@@ -56,7 +56,7 @@ export async function createService(input: ServiceInput): Promise<Service> {
       duration: input.duration,
       includes: input.includes,
       is_active: input.is_active,
-      sort_order: Date.now(),
+      sort_order: Math.floor(Date.now() / 1000),
     })
     .select('*')
     .single()
