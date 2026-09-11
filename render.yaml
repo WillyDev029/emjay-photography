@@ -4,7 +4,8 @@ services:
   - type: web
     name: emjay-photography
     runtime: static
-    buildCommand: npm run build
+    plan: free
+    buildCommand: npm ci && npm run build
     staticPublishPath: ./dist
     envVars:
       - key: VITE_SUPABASE_URL
