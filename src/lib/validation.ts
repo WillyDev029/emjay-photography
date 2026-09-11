@@ -27,7 +27,10 @@ export const bookingSchema = z.object({
   service_id: z.string().nullable(),
   service_name: z.string().trim(),
   preferred_date: z.string({ error: 'Please choose a date' }).trim().regex(/^\d{4}-\d{2}-\d{2}$/, 'Please choose a date'),
-  preferred_time: required('Please choose a time'),
+  preferred_time: required('Please choose a time').regex(
+    /^(?:[01]?\d|2[0-3]):[0-5]\d\s?(?:AM|PM)$/i,
+    'Please choose a time',
+  ),
   location: required('Location', 2).max(120, 'Location is too long'),
   num_people: z.coerce
     .number({ error: 'Number of people is required' })
@@ -66,6 +69,7 @@ export const serviceSchema = z.object({
   name: required('Name').max(100, 'Name is too long'),
   description: required('Description').max(3000, 'Description is too long'),
   price: z.coerce.number().min(0).nullable().optional(),
+  currency: z.enum(['NGN', 'USD']).default('NGN'),
   price_suffix: z.string().max(40, 'Too long').default('per session'),
   duration: required('Duration').max(80, 'Duration is too long'),
   includes: z

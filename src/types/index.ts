@@ -20,6 +20,8 @@ export interface PortfolioPhoto {
   created_at: string
 }
 
+export type ServiceCurrency = 'NGN' | 'USD'
+
 export interface Service {
   id: string
   name: string
@@ -28,6 +30,7 @@ export interface Service {
   image_url: string
   storage_path: string | null
   price: number | null
+  currency: ServiceCurrency
   price_suffix: string
   duration: string
   includes: string[]

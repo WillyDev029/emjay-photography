@@ -75,7 +75,7 @@ export function ServicesPage() {
                     <div className="p-7 sm:p-10">
                       <p className="text-xs font-medium uppercase tracking-[0.3em] text-gold-600">
                         {service.price !== null
-                          ? `${formatPrice(service.price)} ${service.price_suffix}`
+                          ? `${formatPrice(service.price, service.currency)} ${service.price_suffix}`
                           : 'Price on request'}
                       </p>
                       <h2 className="mt-2 font-display text-3xl text-ink-950">{service.name}</h2>
@@ -119,7 +119,7 @@ export function ServicesPage() {
                         {settings?.whatsapp_number && (
                           <a
                             href={`https://wa.me/${settings.whatsapp_number}?text=${encodeURIComponent(
-                              `Hi! I'd like to ask about your ${service.name} package (${formatPrice(service.price)} ${service.price_suffix}).`,
+                              `Hi! I'd like to ask about your ${service.name} package (${formatPrice(service.price, service.currency)} ${service.price_suffix}).`,
                             )}`}
                             target="_blank"
                             rel="noopener noreferrer"

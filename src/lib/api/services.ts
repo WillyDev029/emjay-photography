@@ -2,12 +2,13 @@ import { getSupabase } from '@/lib/supabase'
 import { demoStore } from '@/lib/demo-store'
 import { isSupabaseConfigured } from '@/config/env'
 import { slugify } from '@/lib/utils'
-import type { Service } from '@/types'
+import type { Service, ServiceCurrency } from '@/types'
 
 export interface ServiceInput {
   name: string
   description: string
   price: number | null
+  currency: ServiceCurrency
   price_suffix: string
   duration: string
   includes: string[]
@@ -50,6 +51,7 @@ export async function createService(input: ServiceInput): Promise<Service> {
       image_url: input.image_url,
       storage_path: input.storage_path ?? null,
       price: input.price,
+      currency: input.currency,
       price_suffix: input.price_suffix,
       duration: input.duration,
       includes: input.includes,
@@ -75,6 +77,7 @@ export async function updateService(
     image_url: patch.image_url,
     storage_path: patch.storage_path,
     price: patch.price,
+    currency: patch.currency,
     price_suffix: patch.price_suffix,
     duration: patch.duration,
     includes: patch.includes,

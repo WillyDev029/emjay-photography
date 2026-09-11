@@ -209,6 +209,7 @@ const service = (
     image_url: img(imageId, 1400),
     storage_path: null,
     price: opts.price ?? null,
+    currency: opts.currency ?? 'NGN',
     price_suffix: opts.price_suffix ?? 'per session',
     duration: opts.duration ?? '2–3 hours',
     includes: opts.includes ?? [],
@@ -224,7 +225,7 @@ export const DEMO_SERVICES: Service[] = [
     'photo-1511285560929-80b456fea0bc',
     'Full-day coverage of your wedding day, from getting-ready moments to the last dance. A second shooter is available to make sure no detail is missed.',
     {
-      price: 3200,
+      price: 1500000,
       price_suffix: 'from',
       duration: 'Full day (8–10 hrs)',
       includes: [
@@ -242,7 +243,7 @@ export const DEMO_SERVICES: Service[] = [
     'photo-1494790108377-be9c29b29330',
     'A relaxed, guided session for individuals, families or couples. Natural light, real moments and images you will actually want to print.',
     {
-      price: 400,
+      price: 150000,
       price_suffix: 'starting at',
       duration: '1–1.5 hours',
       includes: [
@@ -259,7 +260,7 @@ export const DEMO_SERVICES: Service[] = [
     'photo-1511578314322-379afb476865',
     'Candid event coverage for birthdays, anniversaries and celebrations of any size — relaxed, unobtrusive and full of genuine moments.',
     {
-      price: 550,
+      price: 250000,
       price_suffix: 'starting at',
       duration: '3–4 hours',
       includes: [
@@ -277,6 +278,7 @@ export const DEMO_SERVICES: Service[] = [
     'Editorial and lookbook photography for brands, designers and creatives. Set design, styling direction and on-location or studio shoots.',
     {
       price: 900,
+      currency: 'USD',
       price_suffix: 'starting at',
       duration: 'Half day (4 hrs)',
       includes: [
@@ -293,7 +295,7 @@ export const DEMO_SERVICES: Service[] = [
     'photo-1540575467063-178a50c2df87',
     'Headshots, team portraits and event coverage for companies. Professional, consistent imagery that makes your whole team look great.',
     {
-      price: 600,
+      price: 350000,
       price_suffix: 'starting at',
       duration: '2–3 hours',
       includes: [
@@ -311,6 +313,7 @@ export const DEMO_SERVICES: Service[] = [
     'Clean, scroll-stopping product photography for e-commerce or campaigns. White-background shots, lifestyle scenes and detail macros.',
     {
       price: 250,
+      currency: 'USD',
       price_suffix: 'starting at',
       duration: 'Per item / half day',
       includes: [
@@ -327,7 +330,7 @@ export const DEMO_SERVICES: Service[] = [
     'photo-1522673607200-164d1b6ce486',
     'An easy, romantic session before the big day — the perfect warm-up in front of the camera and beautiful images to cherish.',
     {
-      price: 350,
+      price: 200000,
       price_suffix: 'starting at',
       duration: '1–2 hours',
       includes: [
@@ -344,7 +347,7 @@ export const DEMO_SERVICES: Service[] = [
     'photo-1493246507139-91e8fad9978e',
     'Fine-art landscapes and outdoor editorial work. Available for commissions, art licensing and destination shoots.',
     {
-      price: 400,
+      price: 250000,
       price_suffix: 'from',
       duration: 'Half day',
       includes: [

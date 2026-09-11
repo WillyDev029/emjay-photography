@@ -1,4 +1,4 @@
-import type { BookingStatus } from '@/types'
+import type { BookingStatus, ServiceCurrency } from '@/types'
 import { twMerge } from 'tailwind-merge'
 
 /** Join class names, resolving conflicting Tailwind utilities (last wins). */
@@ -42,13 +42,27 @@ export function formatDateTime(value: string | null | undefined): string {
   }).format(date)
 }
 
-export function formatPrice(price: number | null | undefined): string {
+export function formatPrice(
+  price: number | null | undefined,
+  currency: ServiceCurrency = 'NGN',
+): string {
   if (price === null || price === undefined) return 'Price on request'
-  return new Intl.NumberFormat('en-US', {
+  return new Intl.NumberFormat(currency === 'NGN' ? 'en-NG' : 'en-US', {
     style: 'currency',
-    currency: 'USD',
+    currency,
     maximumFractionDigits: 0,
   }).format(price)
+}
+
+/** Convert a 24h "HH:MM" value into the 12h "HH:MM AM/PM" format used for slots. */
+export function formatTo12h(time: string): string {
+  const match = /^([01]?\d|2[0-3]):([0-5]\d)$/.exec(time.trim())
+  if (!match) return ''
+  let hours = Number(match[1])
+  const minutes = match[2]
+  const period = hours >= 12 ? 'PM' : 'AM'
+  hours = hours % 12 || 12
+  return `${String(hours).padStart(2, '0')}:${minutes} ${period}`
 }
 
 const REFERENCE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'

@@ -7,7 +7,7 @@ import { sendNewBookingNotification } from '@/lib/api/emails'
 import { getSettings } from '@/lib/api/settings'
 import { useServices } from '@/hooks/useServices'
 import { TIME_SLOTS } from '@/lib/demo-data'
-import { cn } from '@/lib/utils'
+import { cn, formatTo12h } from '@/lib/utils'
 import { MonthCalendar } from './MonthCalendar'
 import { BookingConfirmation } from './BookingConfirmation'
 import { Field, Input, Select, Textarea } from '@/components/ui/Input'
@@ -69,6 +69,8 @@ export function BookingForm({
 
   const [unavailable, setUnavailable] = useState<string[]>([])
   const [availabilityLoading, setAvailabilityLoading] = useState(false)
+  const [customTimeOpen, setCustomTimeOpen] = useState(false)
+  const [customTime, setCustomTime] = useState('')
 
   useEffect(() => {
     if (preselectedServiceId) {
@@ -84,6 +86,21 @@ export function BookingForm({
       preferred_date: value,
       preferred_time: value === prev.preferred_date ? prev.preferred_time : '',
     }))
+    if (value !== formData.preferred_date) {
+      setCustomTimeOpen(false)
+      setCustomTime('')
+    }
+  }
+
+  const selectSlot = (slot: string) => {
+    setCustomTimeOpen(false)
+    setCustomTime('')
+    handleChange('preferred_time', slot)
+  }
+
+  const handleCustomTimeChange = (value: string) => {
+    setCustomTime(value)
+    handleChange('preferred_time', value ? formatTo12h(value) : '')
   }
 
   const handleChange = (
@@ -199,7 +216,8 @@ export function BookingForm({
             {availabilityLoading ? (
               <div className="mt-3 h-12 animate-pulse rounded-lg bg-ink-100" />
             ) : (
-              <div className="mt-3 grid grid-cols-3 gap-2 sm:grid-cols-4">
+              <>
+                <div className="mt-3 grid grid-cols-3 gap-2 sm:grid-cols-4">
                 {TIME_SLOTS.map((slot) => {
                   const disabled = unavailableSet.has(slot)
                   const selected = formData.preferred_time === slot
@@ -208,7 +226,7 @@ export function BookingForm({
                       key={slot}
                       type="button"
                       disabled={disabled}
-                      onClick={() => handleChange('preferred_time', slot)}
+                      onClick={() => selectSlot(slot)}
                       className={cn(
                         'rounded-md border px-2 py-2.5 text-xs font-medium transition-all duration-200',
                         selected
@@ -223,6 +241,27 @@ export function BookingForm({
                   )
                 })}
               </div>
+              <button
+                type="button"
+                onClick={() => setCustomTimeOpen((prev) => !prev)}
+                className="mt-3 text-xs font-medium text-gold-700 underline-offset-4 transition hover:underline"
+              >
+                {customTimeOpen ? 'Cancel custom time' : "Can't find your time? Pick a time manually"}
+              </button>
+              {customTimeOpen && (
+                <div className="mt-3">
+                  <Input
+                    type="time"
+                    value={customTime}
+                    onChange={(e) => handleCustomTimeChange(e.target.value)}
+                    aria-label="Choose a custom time"
+                  />
+                  <p className="mt-1 text-xs text-ink-400">
+                    Prefer a time outside the slots? Pick any hour and I'll confirm it.
+                  </p>
+                </div>
+              )}
+              </>
             )}
           </div>
         )}
@@ -269,7 +308,16 @@ export function BookingForm({
             </Field>
           </div>
 
-          <Field label="Service" required error={errors.service_id}>
+          <Field
+            label="Service"
+            required
+            error={errors.service_id}
+            hint={
+              formData.service_id === 'custom'
+                ? "Choose this for a mix of services (e.g. engagement + wedding) or when your needs don't fit a listed package — tell me the details in the message box and I'll quote a custom price."
+                : undefined
+            }
+          >
             <Select
               value={formData.service_id}
               onChange={(e) => handleChange('service_id', e.target.value)}

@@ -133,7 +133,10 @@ export const demoStore = {
   },
 
   getServices: (includeInactive = false) => {
-    let items = load().services
+    let items = (load().services ?? []).map((s) => ({
+      ...s,
+      currency: s.currency ?? 'NGN',
+    }))
     if (!includeInactive) items = items.filter((s) => s.is_active)
     return delay(structuredClone([...items].sort((a, b) => a.sort_order - b.sort_order)))
   },

@@ -11,7 +11,7 @@ import { formatPrice } from '@/lib/utils'
 import { AdminPageHeader, Card } from '@/components/admin/AdminPageHeader'
 import { ImageUploader } from '@/components/admin/ImageUploader'
 import { Modal, ConfirmDialog } from '@/components/ui/Modal'
-import { Field, Input, Textarea } from '@/components/ui/Input'
+import { Field, Input, Select, Textarea } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { LoadingBlock, ErrorNotice } from '@/components/ui/State'
@@ -98,7 +98,7 @@ export function AdminServicesPage() {
               <div className="p-5">
                 <p className="text-xs font-medium uppercase tracking-wider text-gold-600">
                   {service.price !== null
-                    ? `${formatPrice(service.price)} ${service.price_suffix}`
+                    ? `${formatPrice(service.price, service.currency)} ${service.price_suffix}`
                     : 'Price on request'}
                 </p>
                 <h3 className="mt-1 font-display text-xl text-ink-900">{service.name}</h3>
@@ -179,6 +179,7 @@ function ServiceFormModal({
     name: service?.name ?? '',
     description: service?.description ?? '',
     price: service?.price?.toString() ?? '',
+    currency: service?.currency ?? 'NGN',
     price_suffix: service?.price_suffix ?? 'per session',
     duration: service?.duration ?? '',
     is_active: service?.is_active ?? true,
@@ -208,6 +209,7 @@ function ServiceFormModal({
         name: form.name.trim(),
         description: form.description.trim(),
         price: form.price ? Number(form.price) : null,
+        currency: form.currency,
         price_suffix: form.price_suffix.trim() || 'per session',
         duration: form.duration.trim(),
         includes,
@@ -266,7 +268,7 @@ function ServiceFormModal({
             />
           </Field>
           <div className="grid grid-cols-2 gap-4">
-            <Field label="Starting price (USD)">
+            <Field label="Starting price">
               <Input
                 type="number"
                 min={0}
@@ -283,6 +285,15 @@ function ServiceFormModal({
               />
             </Field>
           </div>
+          <Field label="Currency" hint="Prices display with this symbol (₦ naira or $ USD)">
+            <Select
+              value={form.currency}
+              onChange={(e) => setForm((f) => ({ ...f, currency: e.target.value as 'NGN' | 'USD' }))}
+            >
+              <option value="NGN">Naira (₦)</option>
+              <option value="USD">Dollar ($)</option>
+            </Select>
+          </Field>
           <Field label="Duration">
             <Input
               value={form.duration}

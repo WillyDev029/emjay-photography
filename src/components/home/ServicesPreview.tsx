@@ -24,7 +24,7 @@ function ServiceTile({ service, large }: { service: Service; large?: boolean }) 
       <div className="absolute inset-0 bg-gradient-to-t from-ink-950/85 via-ink-950/20 to-transparent" />
       <div className="absolute inset-x-0 bottom-0 p-6">
         <p className="text-[0.65rem] font-medium uppercase tracking-[0.3em] text-gold-300">
-          {service.price !== null ? `${formatPrice(service.price)} · ${service.price_suffix}` : 'On enquiry'}
+          {service.price !== null ? `${formatPrice(service.price, service.currency)} · ${service.price_suffix}` : 'On enquiry'}
         </p>
         <h3 className="mt-1.5 font-display text-2xl text-white">{service.name}</h3>
         <p className="mt-1 line-clamp-2 text-sm text-ink-200 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
