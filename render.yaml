@@ -1,0 +1,21 @@
+# Render blueprint — deploy at https://dashboard.render.com/blueprints
+# Optional; you can also create the service manually.
+services:
+  - type: web
+    name: emjay-photography
+    runtime: static
+    buildCommand: npm run build
+    staticPublishPath: ./dist
+    envVars:
+      - key: VITE_SUPABASE_URL
+        sync: false
+      - key: VITE_SUPABASE_ANON_KEY
+        sync: false
+      - key: VITE_APP_URL
+        sync: false
+      - key: VITE_SITE_URL
+        sync: false
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
