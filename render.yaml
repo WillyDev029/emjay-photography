@@ -4,7 +4,6 @@ services:
   - type: web
     name: emjay-photography
     runtime: static
-    plan: free
     buildCommand: npm ci && npm run build
     staticPublishPath: ./dist
     envVars:
