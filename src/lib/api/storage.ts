@@ -7,6 +7,8 @@ export type UploadResult = {
   storage_path: string | null
 }
 
+const MAX_IMAGE_SIZE = 10 * 1024 * 1024 // 10 MB
+
 /**
  * Uploads an image file to Supabase Storage (production) or stores it locally
  * (demo). Returns the public URL and the storage path used for later deletes.
@@ -16,6 +18,12 @@ export async function uploadImage(
   bucket: string,
   folder: string,
 ): Promise<UploadResult> {
+  if (!file.type.startsWith('image/')) {
+    throw new Error('Only image files can be uploaded.')
+  }
+  if (file.size > MAX_IMAGE_SIZE) {
+    throw new Error('Images must be 10 MB or smaller.')
+  }
   if (!isSupabaseConfigured) {
     const url = demoStore.rememberUploadedUrl(file)
     return { image_url: url, storage_path: url }
