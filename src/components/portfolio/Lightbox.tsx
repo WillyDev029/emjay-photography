@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ChevronLeft, ChevronRight, Maximize, Minimize, X } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Info, Maximize, Minimize, X } from 'lucide-react'
 import { CATEGORY_LABELS } from '@/config/site'
 import { formatDateShort } from '@/lib/utils'
 import type { PortfolioPhoto } from '@/types'
@@ -18,6 +18,7 @@ export function Lightbox({
   const [direction, setDirection] = useState(0)
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [controlsVisible, setControlsVisible] = useState(true)
+  const [showInfo, setShowInfo] = useState(false)
   const touchStart = useRef<{ x: number; y: number } | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const hideTimer = useRef<number | null>(null)
@@ -144,6 +145,17 @@ export function Lightbox({
           <div className="flex items-center gap-1.5">
             <button
               type="button"
+              onClick={() => setShowInfo((v) => !v)}
+              className={`rounded-full p-2 transition hover:bg-white/10 hover:text-white ${
+                showInfo ? 'bg-white/15 text-white' : 'text-ink-300'
+              }`}
+              aria-label={showInfo ? 'Hide photo details' : 'Show photo details'}
+              title={showInfo ? 'Hide photo details' : 'Show photo details'}
+            >
+              <Info className="h-6 w-6" />
+            </button>
+            <button
+              type="button"
               onClick={toggleFullscreen}
               className="rounded-full p-2 text-ink-300 transition hover:bg-white/10 hover:text-white"
               aria-label={isFullscreen ? 'Exit fullscreen' : 'View fullscreen'}
@@ -198,21 +210,23 @@ export function Lightbox({
       </div>
 
       <div
-        className={`absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-ink-950/90 via-ink-950/40 to-transparent px-6 pb-5 pt-16 ${overlayClass}`}
+        className={`absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-ink-950/90 via-ink-950/40 to-transparent px-6 pb-5 pt-16 transition-opacity duration-500 ${overlayClass}`}
       >
-        <div className="mx-auto w-full max-w-2xl text-center">
-          <p className="text-[0.65rem] font-medium uppercase tracking-[0.3em] text-gold-400">
-            {CATEGORY_LABELS[meta.category]}
-            {meta.date_taken && ` · ${formatDateShort(meta.date_taken)}`}
-          </p>
-          <h3 className="mt-2 font-display text-2xl text-white">{meta.title}</h3>
-          {meta.description && (
-            <p className="mt-2 text-sm leading-relaxed text-ink-300">{meta.description}</p>
-          )}
-        </div>
+        {showInfo && (
+          <div className="mx-auto w-full max-w-2xl pb-4 text-center">
+            <p className="text-[0.65rem] font-medium uppercase tracking-[0.3em] text-gold-400">
+              {CATEGORY_LABELS[meta.category]}
+              {meta.date_taken && ` · ${formatDateShort(meta.date_taken)}`}
+            </p>
+            <h3 className="mt-2 font-display text-2xl text-white">{meta.title}</h3>
+            {meta.description && (
+              <p className="mt-2 text-sm leading-relaxed text-ink-300">{meta.description}</p>
+            )}
+          </div>
+        )}
 
         {total > 0 && (
-          <div className="mx-auto mt-4 flex max-w-md gap-1.5 overflow-x-auto">
+          <div className="mx-auto flex max-w-md gap-1.5 overflow-x-auto">
             {photos.map((p, i) => (
               <button
                 key={p.id}
