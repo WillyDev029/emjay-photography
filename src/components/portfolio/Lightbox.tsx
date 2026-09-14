@@ -93,7 +93,7 @@ export function Lightbox({
         </button>
       </div>
 
-      <div className="relative flex flex-1 items-center justify-center overflow-hidden px-4 sm:px-16">
+      <div className="relative flex flex-1 items-center justify-center overflow-hidden px-4 sm:px-10">
         <AnimatePresence initial={false} custom={direction} mode="popLayout">
           <motion.img
             key={photo.id}
@@ -104,7 +104,7 @@ export function Lightbox({
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={{ opacity: 0, x: direction > 0 ? -60 : 60, scale: 0.98 }}
             transition={{ duration: 0.35, ease: 'easeOut' }}
-            className="max-h-full max-w-full object-contain shadow-pop"
+            className="h-full w-full max-h-full max-w-full object-contain shadow-pop"
             draggable={false}
           />
         </AnimatePresence>
