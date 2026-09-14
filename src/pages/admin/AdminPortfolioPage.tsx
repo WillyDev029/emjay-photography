@@ -213,26 +213,6 @@ export function AdminPortfolioPage() {
                     <Images className="h-3 w-3" /> {group.photos.length}
                   </span>
                 )}
-                <div className="absolute inset-x-0 bottom-0 flex justify-end gap-1.5 bg-gradient-to-t from-ink-950/70 to-transparent p-2.5 opacity-0 transition group-hover:opacity-100">
-                  <IconButton label="Edit" onClick={() => setEditing(group)}>
-                    <Pencil className="h-4 w-4" />
-                  </IconButton>
-                  <IconButton
-                    label={group.is_featured ? 'Unfeature' : 'Feature'}
-                    onClick={() => void toggleFeature(group)}
-                  >
-                    <Star className={cn('h-4 w-4', group.is_featured && 'fill-gold-400 text-gold-400')} />
-                  </IconButton>
-                  <IconButton
-                    label={group.is_published ? 'Hide' : 'Publish'}
-                    onClick={() => void togglePublish(group)}
-                  >
-                    {group.is_published ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </IconButton>
-                  <IconButton label="Delete" danger onClick={() => setDeleting(group)}>
-                    <Trash2 className="h-4 w-4" />
-                  </IconButton>
-                </div>
               </div>
               <div className="px-4 py-3">
                 <p className="truncate text-sm font-medium text-ink-800">{group.title}</p>
@@ -243,6 +223,28 @@ export function AdminPortfolioPage() {
                     {group.date_taken && <span>{formatDateShort(group.date_taken)}</span>}
                   </span>
                 </p>
+                <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-ink-50 pt-3">
+                  <div className="flex flex-wrap gap-1.5">
+                    <IconButton label="Edit" onClick={() => setEditing(group)}>
+                      <Pencil className="h-4 w-4" />
+                    </IconButton>
+                    <IconButton
+                      label={group.is_featured ? 'Unfeature' : 'Feature'}
+                      onClick={() => void toggleFeature(group)}
+                    >
+                      <Star className={cn('h-4 w-4', group.is_featured && 'fill-gold-400 text-gold-400')} />
+                    </IconButton>
+                    <IconButton
+                      label={group.is_published ? 'Hide' : 'Publish'}
+                      onClick={() => void togglePublish(group)}
+                    >
+                      {group.is_published ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </IconButton>
+                    <IconButton label="Delete" danger onClick={() => setDeleting(group)}>
+                      <Trash2 className="h-4 w-4" />
+                    </IconButton>
+                  </div>
+                </div>
               </div>
             </Card>
           ))}
