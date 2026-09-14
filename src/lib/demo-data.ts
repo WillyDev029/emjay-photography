@@ -60,8 +60,34 @@ const photo = (
     is_featured: opts.is_featured ?? false,
     is_published: opts.is_published ?? true,
     storage_path: null,
-    created_at: new Date('2025-08-01').toISOString(),
+    group_id: opts.group_id ?? null,
+    position: opts.position ?? 0,
+    created_at: opts.created_at ?? new Date('2025-08-01').toISOString(),
   }
+}
+
+const group = (
+  title: string,
+  category: PortfolioPhoto['category'],
+  imageIds: string[],
+  description: string,
+  opts: Partial<PortfolioPhoto> = {},
+): PortfolioPhoto[] => {
+  const groupId = `demo-group-${photoSeq + 1}`
+  return imageIds.map((imageId, i) =>
+    photo(
+      i === 0 ? title : `${title}`,
+      category,
+      imageId,
+      description,
+      {
+        ...opts,
+        group_id: groupId,
+        position: i,
+        created_at: opts.created_at ?? new Date('2025-08-10').toISOString(),
+      },
+    ),
+  )
 }
 
 export const DEMO_PORTFOLIO: PortfolioPhoto[] = [
@@ -190,6 +216,29 @@ export const DEMO_PORTFOLIO: PortfolioPhoto[] = [
     'photo-1493246507139-91e8fad9978e',
     'Fine-art landscape work — part of a personal ongoing series.',
     { date_taken: '2024-11-02', is_featured: true },
+  ),
+  ...group(
+    'Lakeside Engagement',
+    'weddings',
+    [
+      'photo-1583939003579-730e3918a45a',
+      'photo-1519225421980-715cb0215aed',
+      'photo-1469371670807-013ccf25f16a',
+      'photo-1519741497674-611481863552',
+    ],
+    'A full engagement session along the lake — golden hour portraits, ring details and candid laughter.',
+    { is_featured: true, date_taken: '2025-09-02', created_at: new Date('2025-08-20').toISOString() },
+  ),
+  ...group(
+    'Corporate Headshot Day',
+    'portraits',
+    [
+      'photo-1560250097-0b93528c311a',
+      'photo-1507003211169-0a1dd7228f2d',
+      'photo-1573496359142-b8d87734a5a2',
+    ],
+    'A full-day corporate headshot event for a growing tech team.',
+    { date_taken: '2025-08-28', created_at: new Date('2025-08-15').toISOString() },
   ),
 ]
 

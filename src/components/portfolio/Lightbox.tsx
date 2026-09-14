@@ -19,6 +19,7 @@ export function Lightbox({
   const touchStart = useRef<{ x: number; y: number } | null>(null)
 
   const photo = photos[index]
+  const meta = photos[0] ?? photo
   const total = photos.length
 
   const go = useCallback(
@@ -128,12 +129,12 @@ export function Lightbox({
 
       <div className="mx-auto w-full max-w-2xl px-6 pb-8 pt-4 text-center">
         <p className="text-[0.65rem] font-medium uppercase tracking-[0.3em] text-gold-400">
-          {CATEGORY_LABELS[photo.category]}
-          {photo.date_taken && ` · ${formatDateShort(photo.date_taken)}`}
+          {CATEGORY_LABELS[meta.category]}
+          {meta.date_taken && ` · ${formatDateShort(meta.date_taken)}`}
         </p>
-        <h3 className="mt-2 font-display text-2xl text-white">{photo.title}</h3>
-        {photo.description && (
-          <p className="mt-2 text-sm leading-relaxed text-ink-300">{photo.description}</p>
+        <h3 className="mt-2 font-display text-2xl text-white">{meta.title}</h3>
+        {meta.description && (
+          <p className="mt-2 text-sm leading-relaxed text-ink-300">{meta.description}</p>
         )}
       </div>
 

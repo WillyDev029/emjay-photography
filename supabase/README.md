@@ -31,6 +31,15 @@ where lower(email) = lower('you@example.com');
 > (`get_unavailable_times`) so visitor details in the `bookings` table are
 > never exposed to the public.
 
+### Apply later migrations
+
+If your project already has the base schema, run any newer migration files
+(e.g. `migrations/0002_service_currency.sql`, `0003_booking_guard.sql`,
+`0004_portfolio_groups.sql`) the same way — paste each file into the **SQL
+Editor** and run it. The portfolio groups migration adds `group_id` and
+`position` columns used for multi-photo gallery posts and is safe to run on an
+existing database (existing photos keep working unchanged).
+
 ## 3. Deploy the email edge function
 
 The website already calls `booking-emails` for new bookings, booking status

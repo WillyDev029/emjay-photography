@@ -1,15 +1,15 @@
 import { PhotoCard } from './PhotoCard'
 import { Skeleton } from '@/components/ui/Skeleton'
-import type { PortfolioPhoto } from '@/types'
+import type { PortfolioGroup } from '@/types'
 
 export function PhotoMasonry({
-  photos,
+  groups,
   onOpen,
   loading,
   columns = 3,
 }: {
-  photos: PortfolioPhoto[]
-  onOpen: (index: number) => void
+  groups: PortfolioGroup[]
+  onOpen: (group: PortfolioGroup) => void
   loading?: boolean
   columns?: 2 | 3 | 4
 }) {
@@ -28,8 +28,8 @@ export function PhotoMasonry({
 
   return (
     <div className={`columns-1 gap-4 ${colClass} [&>*]:mb-4`}>
-      {photos.map((photo, index) => (
-        <PhotoCard key={photo.id} photo={photo} index={index} onOpen={onOpen} />
+      {groups.map((group, index) => (
+        <PhotoCard key={group.id} group={group} index={index} onOpen={onOpen} />
       ))}
     </div>
   )

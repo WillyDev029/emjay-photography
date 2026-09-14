@@ -18,6 +18,21 @@ export interface PortfolioPhoto {
   is_published: boolean
   storage_path: string | null
   created_at: string
+  group_id: string | null
+  position: number
+}
+
+export interface PortfolioGroup {
+  id: string
+  cover: PortfolioPhoto
+  photos: PortfolioPhoto[]
+  title: string
+  category: PortfolioCategory
+  description: string
+  date_taken: string | null
+  is_featured: boolean
+  is_published: boolean
+  created_at: string
 }
 
 export type ServiceCurrency = 'NGN' | 'USD'
