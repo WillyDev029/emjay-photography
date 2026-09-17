@@ -33,12 +33,17 @@ export function PhotoCard({
           <Images className="h-3 w-3" /> {group.photos.length}
         </span>
       )}
-      <div className="absolute inset-0 bg-gradient-to-t from-ink-950/70 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+      <div className="absolute inset-0 bg-gradient-to-t from-ink-950/85 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
       <div className="absolute inset-x-0 bottom-0 translate-y-3 p-5 text-left opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
         <p className="text-[0.65rem] font-medium uppercase tracking-[0.25em] text-gold-300">
           {CATEGORY_LABELS[group.category]}
         </p>
         <h3 className="mt-1 font-display text-xl text-white">{group.title}</h3>
+        {group.description && (
+          <p className="mt-1.5 line-clamp-2 text-sm leading-relaxed text-white/85">
+            {group.description}
+          </p>
+        )}
       </div>
     </button>
   )

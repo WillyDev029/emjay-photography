@@ -29,7 +29,6 @@ export function Lightbox({
   )
 
   const photo = photos[index]
-  const meta = photos[0] ?? photo
   const total = photos.length
 
   const go = useCallback(
@@ -121,7 +120,7 @@ export function Lightbox({
   }
 
   const overlayClass = `transition-opacity duration-500 ${
-    controlsVisible ? 'opacity-100' : 'pointer-events-none opacity-0'
+    controlsVisible || showInfo ? 'opacity-100' : 'pointer-events-none opacity-0'
   }`
 
   return (
@@ -146,13 +145,15 @@ export function Lightbox({
             <button
               type="button"
               onClick={() => setShowInfo((v) => !v)}
-              className={`rounded-full p-2 transition hover:bg-white/10 hover:text-white ${
-                showInfo ? 'bg-white/15 text-white' : 'text-ink-300'
-              }`}
+              aria-pressed={showInfo}
               aria-label={showInfo ? 'Hide photo details' : 'Show photo details'}
               title={showInfo ? 'Hide photo details' : 'Show photo details'}
+              className={`flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-medium uppercase tracking-wide transition hover:bg-white/10 hover:text-white ${
+                showInfo ? 'bg-white/15 text-white' : 'text-ink-300'
+              }`}
             >
-              <Info className="h-6 w-6" />
+              <Info className="h-4 w-4" />
+              {showInfo ? 'Hide Details' : 'Details'}
             </button>
             <button
               type="button"
@@ -215,12 +216,12 @@ export function Lightbox({
         {showInfo && (
           <div className="mx-auto w-full max-w-2xl pb-4 text-center">
             <p className="text-[0.65rem] font-medium uppercase tracking-[0.3em] text-gold-400">
-              {CATEGORY_LABELS[meta.category]}
-              {meta.date_taken && ` · ${formatDateShort(meta.date_taken)}`}
+              {CATEGORY_LABELS[photo.category]}
+              {photo.date_taken && ` · ${formatDateShort(photo.date_taken)}`}
             </p>
-            <h3 className="mt-2 font-display text-2xl text-white">{meta.title}</h3>
-            {meta.description && (
-              <p className="mt-2 text-sm leading-relaxed text-ink-300">{meta.description}</p>
+            <h3 className="mt-2 font-display text-2xl text-white">{photo.title}</h3>
+            {photo.description && (
+              <p className="mt-2 text-sm leading-relaxed text-ink-300">{photo.description}</p>
             )}
           </div>
         )}
