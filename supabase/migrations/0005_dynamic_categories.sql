@@ -19,10 +19,12 @@ create table if not exists public.categories (
 
 alter table public.categories enable row level security;
 
+drop policy if exists "Categories are public" on public.categories;
 create policy "Categories are public"
   on public.categories for select
   using (true);
 
+drop policy if exists "Admins manage categories" on public.categories;
 create policy "Admins manage categories"
   on public.categories for all
   using (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin'))
