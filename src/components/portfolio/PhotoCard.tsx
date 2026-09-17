@@ -1,40 +1,42 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { Images } from 'lucide-react'
 import { useCategories } from '@/context/CategoriesContext'
 import type { PortfolioGroup } from '@/types'
 
 export function PhotoCard({
   group,
-  index,
   onOpen,
 }: {
   group: PortfolioGroup
-  index: number
   onOpen: (group: PortfolioGroup) => void
 }) {
   const photo = group.cover
   const { labels } = useCategories()
   const categoryLabel = labels[group.category] ?? group.category
   const [hovered, setHovered] = useState(false)
-  const canHover = useRef(
-    typeof window !== 'undefined' &&
+  const [canHover] = useState(
+    () =>
+      typeof window !== 'undefined' &&
       typeof window.matchMedia === 'function' &&
       window.matchMedia('(any-hover: hover)').matches,
   )
+  // On devices without hover, reveal the caption persistently so titles and
+  // descriptions are never hover-locked.
+  const reveal = hovered || !canHover
 
   return (
     <button
       type="button"
       onClick={() => onOpen(group)}
       onMouseEnter={() => {
-        if (canHover.current) setHovered(true)
+        if (canHover) setHovered(true)
       }}
       onMouseLeave={() => setHovered(false)}
       onFocus={() => {
-        if (canHover.current) setHovered(true)
+        if (canHover) setHovered(true)
       }}
       onBlur={() => setHovered(false)}
-      className="group relative mb-4 block w-full break-inside-avoid cursor-zoom-in overflow-hidden rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-600"
+      className="group relative block w-full cursor-zoom-in overflow-hidden rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-600"
       aria-label={`Open ${group.title}${group.photos.length > 1 ? ` (${group.photos.length} photos)` : ''}`}
     >
       <img
@@ -42,10 +44,8 @@ export function PhotoCard({
         alt={photo.title || `Photograph in ${categoryLabel || 'portfolio'}`}
         loading="lazy"
         decoding="async"
-        className={`w-full object-cover transition-transform duration-700 ease-out ${
-          hovered ? 'scale-[1.04]' : ''
-        } ${
-          index % 3 === 0 ? 'aspect-[3/4]' : index % 3 === 1 ? 'aspect-square' : 'aspect-[4/5]'
+        className={`aspect-[4/5] w-full object-cover object-center transition-transform duration-700 ease-out ${
+          reveal ? 'scale-[1.04]' : ''
         }`}
       />
       {group.photos.length > 1 && (
@@ -55,12 +55,12 @@ export function PhotoCard({
       )}
       <div
         className={`absolute inset-0 bg-gradient-to-t from-ink-950/85 via-transparent to-transparent transition-opacity duration-500 ${
-          hovered ? 'opacity-100' : 'opacity-0'
+          reveal ? 'opacity-100' : 'opacity-0'
         }`}
       />
       <div
         className={`absolute inset-x-0 bottom-0 p-5 text-left transition-all duration-500 ${
-          hovered ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'
+          reveal ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'
         }`}
       >
         <p className="text-[0.65rem] font-medium uppercase tracking-[0.25em] text-gold-300">
@@ -68,7 +68,11 @@ export function PhotoCard({
         </p>
         <h3 className="mt-1 font-display text-xl text-white">{group.title}</h3>
         {group.description && (
-          <p className="mt-1.5 line-clamp-2 text-sm leading-relaxed text-white/85">
+          <p
+            className={`mt-1.5 text-sm leading-relaxed text-white/85 ${
+              canHover ? 'line-clamp-2' : 'line-clamp-1'
+            }`}
+          >
             {group.description}
           </p>
         )}
