@@ -91,9 +91,9 @@ export function AboutPage() {
             <p className="text-xs font-medium uppercase tracking-[0.35em] text-gold-600">
               My story
             </p>
-            <h1 className="mt-3 font-display text-3xl sm:text-4xl md:text-5xl">
+            <h2 className="mt-3 font-display text-3xl sm:text-4xl md:text-5xl">
               {settings?.photographer_name ?? 'Emjay'}
-            </h1>
+            </h2>
             <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-ink-500">
               {settings?.location && (
                 <span className="inline-flex items-center gap-1.5">

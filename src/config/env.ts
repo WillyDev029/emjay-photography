@@ -3,7 +3,10 @@ export const SUPABASE_URL: string | undefined =
 export const SUPABASE_ANON_KEY: string | undefined =
   import.meta.env.VITE_SUPABASE_ANON_KEY
 export const APP_URL: string =
-  import.meta.env.VITE_APP_URL ?? 'http://localhost:5173'
+  import.meta.env.VITE_APP_URL ??
+  (import.meta.env.PROD
+    ? 'https://emjay-photography.onrender.com'
+    : 'http://localhost:5173')
 export const SITE_URL: string = import.meta.env.VITE_SITE_URL ?? ''
 
 export const isSupabaseConfigured = Boolean(
