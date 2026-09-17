@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { HelmetProvider } from 'react-helmet-async'
 import { AuthProvider } from '@/context/AuthContext'
 import { SettingsProvider } from '@/context/SettingsContext'
+import { CategoriesProvider } from '@/context/CategoriesContext'
 import { ToastProvider } from '@/hooks/useToast'
 import { Layout } from '@/components/layout/Layout'
 import { ScrollToTop } from '@/components/layout/ScrollToTop'
@@ -56,7 +57,8 @@ export function App() {
     <HelmetProvider>
       <ToastProvider>
         <SettingsProvider>
-          <AuthProvider>
+          <CategoriesProvider>
+            <AuthProvider>
             <BrowserRouter>
               <ScrollToTop />
               <Routes>
@@ -143,6 +145,7 @@ export function App() {
               </Routes>
             </BrowserRouter>
           </AuthProvider>
+          </CategoriesProvider>
         </SettingsProvider>
       </ToastProvider>
     </HelmetProvider>

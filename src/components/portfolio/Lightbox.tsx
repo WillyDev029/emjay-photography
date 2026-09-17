@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ChevronLeft, ChevronRight, Info, Maximize, Minimize, X } from 'lucide-react'
-import { CATEGORY_LABELS } from '@/config/site'
 import { formatDateShort } from '@/lib/utils'
+import { useCategories } from '@/context/CategoriesContext'
 import type { PortfolioPhoto } from '@/types'
 
 export function Lightbox({
@@ -30,6 +30,8 @@ export function Lightbox({
 
   const photo = photos[index]
   const total = photos.length
+  const { labels } = useCategories()
+  const categoryLabel = labels[photo.category] ?? photo.category
 
   const go = useCallback(
     (delta: number) => {
@@ -216,7 +218,7 @@ export function Lightbox({
         {showInfo && (
           <div className="mx-auto w-full max-w-2xl pb-4 text-center">
             <p className="text-[0.65rem] font-medium uppercase tracking-[0.3em] text-gold-400">
-              {CATEGORY_LABELS[photo.category]}
+              {categoryLabel}
               {photo.date_taken && ` · ${formatDateShort(photo.date_taken)}`}
             </p>
             <h3 className="mt-2 font-display text-2xl text-white">{photo.title}</h3>

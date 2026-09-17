@@ -29,7 +29,7 @@ import {
   groupPhotos,
 } from '@/lib/api/portfolio'
 import { uploadImage, removeStoredImage } from '@/lib/api/storage'
-import { CATEGORIES, CATEGORY_LABELS } from '@/config/site'
+import { useCategories } from '@/context/CategoriesContext'
 import { AdminPageHeader, Card } from '@/components/admin/AdminPageHeader'
 import { ImageUploader } from '@/components/admin/ImageUploader'
 import { Modal, ConfirmDialog } from '@/components/ui/Modal'
@@ -53,6 +53,7 @@ const DEFAULT_META = {
 export function AdminPortfolioPage() {
   const { data, loading, error, reload } = usePortfolio()
   const { toast } = useToast()
+  const { categories, labels } = useCategories()
   const [search, setSearch] = useState('')
   const [categoryFilter, setCategoryFilter] = useState<string>('all')
   const [uploadOpen, setUploadOpen] = useState(false)
@@ -165,9 +166,9 @@ export function AdminPortfolioPage() {
           className="sm:w-52"
         >
           <option value="all">All categories</option>
-          {CATEGORIES.map((c) => (
-            <option key={c} value={c}>
-              {CATEGORY_LABELS[c]}
+          {categories.map((c) => (
+            <option key={c.slug} value={c.slug}>
+              {c.name}
             </option>
           ))}
         </Select>
@@ -217,7 +218,7 @@ export function AdminPortfolioPage() {
               <div className="px-4 py-3">
                 <p className="truncate text-sm font-medium text-ink-800">{group.title}</p>
                 <p className="mt-0.5 flex items-center justify-between text-xs text-ink-400">
-                  {CATEGORY_LABELS[group.category]}
+                  {labels[group.category] ?? group.category}
                   <span className="flex items-center gap-1.5">
                     {group.photos.length > 1 && <span>{group.photos.length} photos</span>}
                     {group.date_taken && <span>{formatDateShort(group.date_taken)}</span>}
@@ -326,6 +327,7 @@ function UploadModal({
   onDone: () => void
 }) {
   const { toast } = useToast()
+  const { categories } = useCategories()
   const [meta, setMeta] = useState(DEFAULT_META)
   const [files, setFiles] = useState<File[]>([])
   const [uploading, setUploading] = useState(false)
@@ -472,9 +474,9 @@ function UploadModal({
                 setMeta((m) => ({ ...m, category: e.target.value as PortfolioCategory }))
               }
             >
-              {CATEGORIES.map((c) => (
-                <option key={c} value={c}>
-                  {CATEGORY_LABELS[c]}
+              {categories.map((c) => (
+                <option key={c.slug} value={c.slug}>
+                  {c.name}
                 </option>
               ))}
             </Select>
@@ -514,6 +516,7 @@ function EditModal({
   onReload: () => Promise<void>
 }) {
   const { toast } = useToast()
+  const { categories } = useCategories()
   const [form, setForm] = useState({
     title: group.title,
     category: group.category,
@@ -695,9 +698,9 @@ function EditModal({
                 setForm((f) => ({ ...f, category: e.target.value as PortfolioCategory }))
               }
             >
-              {CATEGORIES.map((c) => (
-                <option key={c} value={c}>
-                  {CATEGORY_LABELS[c]}
+              {categories.map((c) => (
+                <option key={c.slug} value={c.slug}>
+                  {c.name}
                 </option>
               ))}
             </Select>

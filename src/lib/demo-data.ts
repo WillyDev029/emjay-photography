@@ -1,6 +1,7 @@
 import type {
   BlockedDate,
   Booking,
+  PortfolioCategoryInfo,
   PortfolioPhoto,
   Service,
   Testimonial,
@@ -16,6 +17,17 @@ export const DEMO_IMAGES = {
   heroFallback: img('photo-1465495976277-4387d4b0b4c6', 2200),
   about: img('photo-1507003211169-0a1dd7228f2d', 1200),
 }
+
+/** Default category list, used in demo mode and as the offline fallback. */
+export const DEFAULT_CATEGORIES: PortfolioCategoryInfo[] = [
+  { id: 'demo-cat-weddings', name: 'Weddings', slug: 'weddings', sort_order: 0, is_active: true, created_at: new Date('2025-01-01').toISOString() },
+  { id: 'demo-cat-portraits', name: 'Portraits', slug: 'portraits', sort_order: 1, is_active: true, created_at: new Date('2025-01-01').toISOString() },
+  { id: 'demo-cat-events', name: 'Events', slug: 'events', sort_order: 2, is_active: true, created_at: new Date('2025-01-01').toISOString() },
+  { id: 'demo-cat-fashion', name: 'Fashion', slug: 'fashion', sort_order: 3, is_active: true, created_at: new Date('2025-01-01').toISOString() },
+  { id: 'demo-cat-products', name: 'Products', slug: 'products', sort_order: 4, is_active: true, created_at: new Date('2025-01-01').toISOString() },
+  { id: 'demo-cat-lifestyle', name: 'Lifestyle', slug: 'lifestyle', sort_order: 5, is_active: true, created_at: new Date('2025-01-01').toISOString() },
+  { id: 'demo-cat-other', name: 'Other', slug: 'other', sort_order: 6, is_active: true, created_at: new Date('2025-01-01').toISOString() },
+]
 
 export const DEMO_SETTINGS: WebsiteSettings = {
   photographer_name: 'Emjay',

@@ -3,6 +3,7 @@ import type {
   Booking,
   BookingStatus,
   ContactMessage,
+  PortfolioCategoryInfo,
   PortfolioPhoto,
   PortfolioCategory,
   Service,
@@ -10,6 +11,7 @@ import type {
   WebsiteSettings,
 } from '@/types'
 import {
+  DEFAULT_CATEGORIES,
   DEMO_BLOCKED_DATES,
   DEMO_BOOKINGS,
   DEMO_PORTFOLIO,
@@ -23,6 +25,7 @@ const DB_KEY = 'emjay_demo_db_v1'
 interface DemoDB {
   settings: WebsiteSettings
   portfolio: PortfolioPhoto[]
+  categories: PortfolioCategoryInfo[]
   services: Service[]
   bookings: Booking[]
   testimonials: Testimonial[]
@@ -37,6 +40,7 @@ function seed(): DemoDB {
   return {
     settings: structuredClone(DEMO_SETTINGS),
     portfolio: structuredClone(DEMO_PORTFOLIO),
+    categories: structuredClone(DEFAULT_CATEGORIES),
     services: structuredClone(DEMO_SERVICES),
     bookings: structuredClone(DEMO_BOOKINGS),
     testimonials: structuredClone(DEMO_TESTIMONIALS),
@@ -51,6 +55,9 @@ function load(): DemoDB {
     if (!raw) return seed()
     const parsed = JSON.parse(raw) as DemoDB
     if (!parsed.settings || !Array.isArray(parsed.portfolio)) return seed()
+    if (!Array.isArray(parsed.categories) || parsed.categories.length === 0) {
+      parsed.categories = structuredClone(DEFAULT_CATEGORIES)
+    }
     return parsed
   } catch {
     return seed()
@@ -107,6 +114,50 @@ export const demoStore = {
     if (opts?.featuredOnly) items = items.filter((p) => p.is_featured)
     if (opts?.category) items = items.filter((p) => p.category === opts.category)
     return delay(structuredClone(items))
+  },
+
+  getCategories: () =>
+    delay(
+      structuredClone(
+        [...(load().categories ?? [])].sort((a, b) => a.sort_order - b.sort_order),
+      ),
+    ),
+
+  createCategory: async (input: { name: string; slug: string }) => {
+    const db = load()
+    const slug = input.slug.trim().toLowerCase()
+    if (!slug) throw new Error('Category slug is required')
+    if (db.categories.some((c) => c.slug === slug)) {
+      throw new Error(`A category with slug "${slug}" already exists`)
+    }
+    const created: PortfolioCategoryInfo = {
+      id: uid('cat'),
+      name: input.name.trim() || slug,
+      slug,
+      sort_order: db.categories.length,
+      is_active: true,
+      created_at: new Date().toISOString(),
+    }
+    db.categories.push(created)
+    save(db)
+    return structuredClone(created)
+  },
+
+  deleteCategory: async (slug: string) => {
+    const db = load()
+    const index = db.categories.findIndex((c) => c.slug === slug)
+    if (index === -1) return
+    if (db.categories.length <= 1) {
+      throw new Error('At least one category must remain')
+    }
+    const target =
+      db.categories.find((c) => c.slug === 'other' && c.slug !== slug)?.slug ??
+      db.categories.find((c) => c.slug !== slug)!.slug
+    db.portfolio = db.portfolio.map((p) =>
+      p.category === slug ? { ...p, category: target } : p,
+    )
+    db.categories.splice(index, 1)
+    save(db)
   },
 
   createPhoto: async (input: Omit<PortfolioPhoto, 'id' | 'created_at'>) => {

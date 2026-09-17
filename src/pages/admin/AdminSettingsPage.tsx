@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
-import { Save } from 'lucide-react'
+import { Plus, Save, Trash2 } from 'lucide-react'
 import { useSettings } from '@/context/SettingsContext'
+import { useCategories } from '@/context/CategoriesContext'
 import { updateSettings } from '@/lib/api/settings'
 import { useToast } from '@/hooks/useToast'
 import { AdminPageHeader, Card } from '@/components/admin/AdminPageHeader'
@@ -8,14 +9,31 @@ import { ImageUploader } from '@/components/admin/ImageUploader'
 import { Field, Input, Textarea } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
 import { LoadingBlock } from '@/components/ui/State'
+import { ConfirmDialog } from '@/components/ui/Modal'
 import { Seo } from '@/components/ui/Seo'
 import type { UploadResult } from '@/lib/api/storage'
 
+function slugify(value: string): string {
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+}
+
 export function AdminSettingsPage() {
   const { settings, refresh } = useSettings()
+  const { categories, add, remove } = useCategories()
   const { toast } = useToast()
   const [saving, setSaving] = useState(false)
   const [form, setForm] = useState<Record<string, string>>({})
+  const [newCategory, setNewCategory] = useState('')
+  const [addingCategory, setAddingCategory] = useState(false)
+  const [deletingCategory, setDeletingCategory] = useState<{
+    name: string
+    slug: string
+  } | null>(null)
+  const [removingCategory, setRemovingCategory] = useState(false)
 
   useEffect(() => {
     if (settings) {
@@ -116,6 +134,40 @@ export function AdminSettingsPage() {
     }
   }
 
+  const handleAddCategory = async () => {
+    const name = newCategory.trim()
+    if (!name || addingCategory) return
+    const slug = slugify(name)
+    if (!slug) {
+      toast('Please enter a category name.', 'error')
+      return
+    }
+    setAddingCategory(true)
+    try {
+      await add({ name, slug })
+      setNewCategory('')
+      toast(`Added "${name}".`)
+    } catch (err) {
+      toast(err instanceof Error ? err.message : 'Could not add category.', 'error')
+    } finally {
+      setAddingCategory(false)
+    }
+  }
+
+  const confirmDeleteCategory = async () => {
+    if (!deletingCategory || removingCategory) return
+    setRemovingCategory(true)
+    try {
+      await remove(deletingCategory.slug)
+      toast(`Removed "${deletingCategory.name}". Photos in it were moved to the first available category.`)
+      setDeletingCategory(null)
+    } catch (err) {
+      toast(err instanceof Error ? err.message : 'Could not remove category.', 'error')
+    } finally {
+      setRemovingCategory(false)
+    }
+  }
+
   const SECTIONS: Array<{ title: string; fields: React.ReactNode }> = [
     {
       title: 'Identity',
@@ -211,7 +263,73 @@ export function AdminSettingsPage() {
             {fields}
           </Card>
         ))}
+
+        <Card className="p-6">
+          <h2 className="font-display text-xl text-ink-900">Portfolio categories</h2>
+          <p className="mt-1 text-sm text-ink-500">
+            Shown in the portfolio filter and photo forms. Removing a category moves its photos
+            to &quot;Other&quot; (or the first remaining category).
+          </p>
+
+          <div className="mt-5 flex flex-col gap-2 sm:flex-row">
+            <Input
+              value={newCategory}
+              onChange={(e) => setNewCategory(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') void handleAddCategory()
+              }}
+              placeholder="New category name…"
+              className="sm:max-w-xs"
+            />
+            <Button
+              onClick={() => void handleAddCategory()}
+              loading={addingCategory}
+              disabled={!newCategory.trim()}
+            >
+              <Plus className="h-4 w-4" /> Add category
+            </Button>
+          </div>
+
+          <ul className="mt-5 divide-y divide-ink-100">
+            {categories.length === 0 && (
+              <li className="py-3 text-sm text-ink-500">No categories yet.</li>
+            )}
+            {categories.map((category) => (
+              <li
+                key={category.slug}
+                className="flex items-center justify-between gap-3 py-3"
+              >
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-medium text-ink-800">{category.name}</p>
+                  <p className="text-xs text-ink-400">{category.slug}</p>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() =>
+                    setDeletingCategory({ name: category.name, slug: category.slug })
+                  }
+                >
+                  <Trash2 className="h-3.5 w-3.5" /> Remove
+                </Button>
+              </li>
+            ))}
+          </ul>
+        </Card>
       </div>
+
+      <ConfirmDialog
+        open={Boolean(deletingCategory)}
+        onClose={() => setDeletingCategory(null)}
+        onConfirm={() => void confirmDeleteCategory()}
+        title="Remove category?"
+        message={
+          deletingCategory
+            ? `Remove "${deletingCategory.name}"? Photos in this category will be moved to "Other" (or the first remaining category).`
+            : ''
+        }
+        confirmLabel="Remove"
+      />
     </>
   )
 }

@@ -8,6 +8,7 @@ import { Lightbox } from '@/components/portfolio/Lightbox'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { ErrorNotice } from '@/components/ui/State'
 import { useSettings } from '@/context/SettingsContext'
+import { useCategories } from '@/context/CategoriesContext'
 import type { PortfolioGroup } from '@/types'
 
 type Filter = string
@@ -17,6 +18,7 @@ export function PortfolioPage() {
   const [category, setCategory] = useState<Filter>('all')
   const [lightbox, setLightbox] = useState<PortfolioGroup | null>(null)
   const { settings } = useSettings()
+  const { labels } = useCategories()
 
   const groups = useMemo(() => groupPhotos(data ?? []), [data])
 
@@ -54,7 +56,7 @@ export function PortfolioPage() {
             <ErrorNotice message={error} onRetry={reload} />
           ) : filtered.length === 0 && !loading ? (
             <EmptyState
-              title={category === 'all' ? 'No photos yet' : `No photos in ${category} yet`}
+              title={category === 'all' ? 'No photos yet' : `No photos in ${labels[category] ?? category} yet`}
               message="New work will appear here as soon as it is published."
             />
           ) : (

@@ -40,6 +40,11 @@ Editor** and run it. The portfolio groups migration adds `group_id` and
 `position` columns used for multi-photo gallery posts and is safe to run on an
 existing database (existing photos keep working unchanged).
 
+**`0005_dynamic_categories.sql`** (required for the admin Categories manager)
+creates the `categories` table and changes `portfolio_photos.category` from an
+enum to plain text so categories can be added *and* removed at runtime. Run it
+after `0004`. Existing photos keep their current category.
+
 ## 3. Deploy the email edge function
 
 The website already calls `booking-emails` for new bookings, booking status

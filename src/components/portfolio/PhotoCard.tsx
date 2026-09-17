@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { Images } from 'lucide-react'
-import { CATEGORY_LABELS } from '@/config/site'
+import { useCategories } from '@/context/CategoriesContext'
 import type { PortfolioGroup } from '@/types'
 
 export function PhotoCard({
@@ -13,6 +13,8 @@ export function PhotoCard({
   onOpen: (group: PortfolioGroup) => void
 }) {
   const photo = group.cover
+  const { labels } = useCategories()
+  const categoryLabel = labels[group.category] ?? group.category
   const [hovered, setHovered] = useState(false)
   const canHover = useRef(
     typeof window !== 'undefined' &&
@@ -37,7 +39,7 @@ export function PhotoCard({
     >
       <img
         src={photo.image_url}
-        alt={photo.title || `Photograph in ${CATEGORY_LABELS[photo.category] ?? 'portfolio'}`}
+        alt={photo.title || `Photograph in ${categoryLabel || 'portfolio'}`}
         loading="lazy"
         decoding="async"
         className={`w-full object-cover transition-transform duration-700 ease-out ${
@@ -62,7 +64,7 @@ export function PhotoCard({
         }`}
       >
         <p className="text-[0.65rem] font-medium uppercase tracking-[0.25em] text-gold-300">
-          {CATEGORY_LABELS[group.category]}
+          {categoryLabel}
         </p>
         <h3 className="mt-1 font-display text-xl text-white">{group.title}</h3>
         {group.description && (

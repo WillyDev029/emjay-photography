@@ -1,11 +1,13 @@
-export type PortfolioCategory =
-  | 'weddings'
-  | 'portraits'
-  | 'events'
-  | 'fashion'
-  | 'products'
-  | 'lifestyle'
-  | 'other'
+export type PortfolioCategory = string
+
+export interface PortfolioCategoryInfo {
+  id: string
+  name: string
+  slug: string
+  sort_order: number
+  is_active: boolean
+  created_at: string
+}
 
 export interface PortfolioPhoto {
   id: string

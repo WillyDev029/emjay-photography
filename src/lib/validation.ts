@@ -51,15 +51,7 @@ export const contactSchema = z.object({
 
 export const photoSchema = z.object({
   title: required('Title').max(120, 'Title is too long'),
-  category: z.enum([
-    'weddings',
-    'portraits',
-    'events',
-    'fashion',
-    'products',
-    'lifestyle',
-    'other',
-  ]),
+  category: z.string({ error: 'Please choose a category' }).trim().min(1, 'Please choose a category'),
   description: z.string().trim().max(2000).default(''),
   date_taken: z.string().nullable(),
   cache_buster: z.string().optional(),

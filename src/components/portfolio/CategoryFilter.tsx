@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils'
-import { CATEGORIES, CATEGORY_LABELS } from '@/config/site'
+import { useCategories } from '@/context/CategoriesContext'
 import type { PortfolioCategory } from '@/types'
 
 export type CategoryFilterValue = PortfolioCategory | 'all'
@@ -13,11 +13,12 @@ export function CategoryFilter({
   onChange: (value: string) => void
   counts?: Record<string, number>
 }) {
+  const { categories } = useCategories()
   const options: Array<{ value: string; label: string }> = [
     { value: 'all', label: 'All' },
-    ...CATEGORIES.map((value) => ({
-      value,
-      label: CATEGORY_LABELS[value],
+    ...categories.map((category) => ({
+      value: category.slug,
+      label: category.name,
     })),
   ]
 
